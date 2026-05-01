@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Building, MapPin, ArrowRight } from "lucide-react";
+import { Building, MapPin, ArrowRight, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -20,7 +20,7 @@ export function RecentJobs() {
       jobType: "full-time",
       skills: ["React", "TypeScript", "Node.js"],
       companyLogo: null,
-      createdAt: Date.now() - 2 * 60 * 60 * 1000, // 2 hours ago
+      createdAt: Date.now() - 2 * 60 * 60 * 1000,
     },
     {
       title: "Product Designer",
@@ -31,7 +31,7 @@ export function RecentJobs() {
       jobType: "full-time",
       skills: ["Figma", "Research", "Systems"],
       companyLogo: null,
-      createdAt: Date.now() - 5 * 60 * 60 * 1000, // 5 hours ago
+      createdAt: Date.now() - 5 * 60 * 60 * 1000,
     },
     {
       title: "Staff Backend Engineer",
@@ -42,7 +42,7 @@ export function RecentJobs() {
       jobType: "full-time",
       skills: ["Rust", "Go", "Distributed"],
       companyLogo: null,
-      createdAt: Date.now() - 24 * 60 * 60 * 1000, // 1 day ago
+      createdAt: Date.now() - 24 * 60 * 60 * 1000,
     },
   ];
 
@@ -71,29 +71,40 @@ export function RecentJobs() {
             </p>
           </div>
           <Link href="/jobs">
-            <Button variant="outline" className="group rounded-full bg-background border-border/60 hover:border-foreground/20 hover:bg-muted/50 transition-all font-medium">
+            <Button variant="outline" className="group rounded-full bg-background border-primary/20 hover:border-primary/40 hover:bg-primary/5 transition-all font-medium">
               View all jobs
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
           </Link>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-3">
-          {jobs.map((job: any) => (
+        <div className="grid gap-5 lg:grid-cols-3">
+          {jobs.map((job: any, index: number) => (
             <Link key={job._id || job.title} href="/sign-up">
-              <div className="group relative flex h-full flex-col justify-between rounded-xl border border-border/40 bg-background p-6 transition-all duration-200 hover:-translate-y-1 hover:border-border/80 hover:shadow-lg hover:shadow-black/[0.03]">
+              <div
+                className="group relative flex h-full flex-col justify-between rounded-xl border border-border/40 bg-background p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div>
                   <div className="mb-5 flex items-start justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-border/50 bg-black dark:bg-zinc-800 font-bold text-white shadow-sm transition-transform group-hover:scale-105">
+                    <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-primary/10 font-bold text-primary shadow-sm transition-all group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105 group-hover:shadow-md group-hover:shadow-primary/20">
                       {job.companyLogo && !job.companyLogo.includes("default") ? (
                         <img src={job.companyLogo} alt={job.companyName} className="h-full w-full object-cover" />
                       ) : (
-                        <Building className="h-6 w-6 text-white/90" />
+                        <Building className="h-6 w-6" />
                       )}
                     </div>
-                    <Badge variant="secondary" className="bg-muted/50 text-muted-foreground text-[10px] font-medium tracking-wider uppercase rounded-sm group-hover:bg-muted group-hover:text-foreground">
-                      {timeAgo(job.createdAt)}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      {index === 0 && (
+                        <Badge className="bg-primary/10 text-primary text-[10px] font-medium tracking-wider uppercase rounded-sm border-0">
+                          <Sparkles className="h-3 w-3 mr-1" />
+                          New
+                        </Badge>
+                      )}
+                      <Badge variant="secondary" className="bg-muted/50 text-muted-foreground text-[10px] font-medium tracking-wider uppercase rounded-sm group-hover:bg-primary/10 group-hover:text-primary">
+                        {timeAgo(job.createdAt)}
+                      </Badge>
+                    </div>
                   </div>
 
                   <h3 className="mb-1.5 text-lg font-semibold tracking-tight text-foreground line-clamp-1">
@@ -113,7 +124,7 @@ export function RecentJobs() {
 
                   <div className="mb-6 flex flex-wrap gap-2">
                     {job.skills?.slice(0, 3).map((tag: string) => (
-                      <span key={tag} className="inline-flex rounded-md bg-muted/40 px-2 py-1 text-xs font-medium text-muted-foreground">
+                      <span key={tag} className="inline-flex rounded-md bg-primary/5 border border-primary/10 px-2 py-1 text-xs font-medium text-primary/80">
                         {tag}
                       </span>
                     ))}

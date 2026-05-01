@@ -24,7 +24,7 @@ export function TrustedCompanies() {
   const scrollingCompanies = [...companies, ...companies];
 
   return (
-    <section className="relative overflow-hidden border-b border-border/40 bg-zinc-50/50 py-12 dark:bg-background">
+    <section className="relative overflow-hidden border-b border-border/40 bg-card/30 py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="mb-8 text-center text-sm font-medium uppercase tracking-widest text-muted-foreground/80">
           Trusted by engineering & design teams at
@@ -37,7 +37,7 @@ export function TrustedCompanies() {
             {scrollingCompanies.map((company, index) => (
               <div
                 key={`${company.name}-${index}`}
-                className="group flex flex-shrink-0 cursor-pointer items-center gap-2 grayscale opacity-60 transition-all duration-300 hover:scale-105 hover:grayscale-0 hover:opacity-100"
+                className="group flex flex-shrink-0 cursor-pointer items-center gap-2 grayscale opacity-50 transition-all duration-300 hover:scale-105 hover:grayscale-0 hover:opacity-100"
               >
                 <span className="text-xl font-bold tracking-tight text-foreground/90">
                   {company.name}

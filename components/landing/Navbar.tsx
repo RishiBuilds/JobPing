@@ -3,29 +3,42 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Bookmark } from "lucide-react";
 import { Show, UserButton } from "@clerk/nextjs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navLinks = [
   { label: "Jobs", href: "/jobs" },
-  { label: "Companies", href: "#companies" },
+  { label: "Features", href: "#features" },
   { label: "How it Works", href: "#how-it-works" },
   { label: "Pricing", href: "#pricing" },
 ];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/60 backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        scrolled
+          ? "border-b border-primary/10 bg-background/80 backdrop-blur-xl shadow-sm shadow-primary/5"
+          : "border-b border-transparent bg-background/40 backdrop-blur-md"
+      }`}
+    >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Logo and Nav Links */}
         <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-foreground text-background transition-transform group-hover:scale-105">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground transition-transform group-hover:scale-105 shadow-sm">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
                 <polyline points="7.5 4.21 12 6.81 16.5 4.21" />
@@ -63,12 +76,18 @@ export function Navbar() {
               </Button>
             </Link>
             <Link href="/sign-up">
-              <Button size="sm" className="font-medium rounded-full px-5">
+              <Button size="sm" className="font-medium rounded-full px-5 shadow-sm">
                 Sign Up
               </Button>
             </Link>
           </Show>
           <Show when="signed-in">
+            <Link href="/saved">
+              <Button variant="ghost" size="sm" className="font-medium gap-1.5">
+                <Bookmark className="h-4 w-4" />
+                Saved
+              </Button>
+            </Link>
             <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="font-medium">
                 Dashboard
@@ -114,6 +133,12 @@ export function Navbar() {
                     </Link>
                   </Show>
                   <Show when="signed-in">
+                    <Link href="/saved" onClick={() => setOpen(false)}>
+                      <Button variant="outline" className="w-full gap-1.5">
+                        <Bookmark className="h-4 w-4" />
+                        Saved Jobs
+                      </Button>
+                    </Link>
                     <Link href="/dashboard" onClick={() => setOpen(false)}>
                       <Button variant="outline" className="w-full">
                         Dashboard
