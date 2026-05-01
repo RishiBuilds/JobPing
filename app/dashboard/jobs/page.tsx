@@ -16,6 +16,7 @@ import {
   Trash2,
   MapPin,
   Clock,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -36,6 +37,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
+
+function ApplicantCount({ jobId }: { jobId: Id<"jobs"> }) {
+  const count = useQuery(api.applications.getApplicationCount, { jobId });
+  return (
+    <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+      <Users className="h-3.5 w-3.5" />
+      <span>{count ?? 0} applicant{count === 1 ? "" : "s"}</span>
+    </div>
+  );
+}
 
 export default function JobsPage() {
   const { organization } = useOrganization();
@@ -125,7 +136,7 @@ export default function JobsPage() {
       ) : (
         <div className="space-y-4">
           {jobs.map((job) => (
-            <Card key={job._id} className="border-border/50">
+            <Card key={job._id} className="border-border/50 transition-all hover:border-primary/15 hover:shadow-sm">
               <CardContent className="flex items-center justify-between p-6">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
@@ -134,7 +145,7 @@ export default function JobsPage() {
                       variant={job.isPublished ? "default" : "secondary"}
                       className={
                         job.isPublished
-                          ? "bg-foreground text-background"
+                          ? "bg-primary/10 text-primary border border-primary/20"
                           : "bg-muted text-muted-foreground"
                       }
                     >
@@ -162,6 +173,8 @@ export default function JobsPage() {
                         {job.salaryMax.toLocaleString()}
                       </span>
                     )}
+                    {/* Applicant count */}
+                    <ApplicantCount jobId={job._id as Id<"jobs">} />
                   </div>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {job.skills.slice(0, 5).map((skill) => (
