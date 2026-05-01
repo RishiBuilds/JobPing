@@ -15,6 +15,7 @@ import type * as jobs from "../jobs.js";
 import type * as memberships from "../memberships.js";
 import type * as notifications from "../notifications.js";
 import type * as organizations from "../organizations.js";
+import type * as savedJobs from "../savedJobs.js";
 import type * as users from "../users.js";
 import type * as webhookProcessor from "../webhookProcessor.js";
 
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   memberships: typeof memberships;
   notifications: typeof notifications;
   organizations: typeof organizations;
+  savedJobs: typeof savedJobs;
   users: typeof users;
   webhookProcessor: typeof webhookProcessor;
 }>;

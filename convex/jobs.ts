@@ -415,11 +415,14 @@ export const getStats = query({
 
     const allUsers = await ctx.db.query("users").collect();
     const allOrgs = await ctx.db.query("organizations").collect();
+    const allApplications = await ctx.db.query("applications").collect();
+    const activeApplications = allApplications.filter((a) => !a.isDeleted);
 
     return {
       activeJobs: activeJobs.length,
       companies: allOrgs.length,
       jobSeekers: allUsers.filter((u) => u.role === "job_seeker").length,
+      applications: activeApplications.length,
     };
   },
 });
