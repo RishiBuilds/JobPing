@@ -30,6 +30,11 @@ import {
   Upload,
   FileText,
   AlertTriangle,
+  Bookmark,
+  BookmarkCheck,
+  Share2,
+  Link2,
+  ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -51,8 +56,13 @@ export default function JobDetailPage({
     jobId: jobId as Id<"jobs">,
   });
 
+  const isSaved = useQuery(api.savedJobs.checkIfSaved, {
+    jobId: jobId as Id<"jobs">,
+  });
+
   const apply = useMutation(api.applications.apply);
   const generateUploadUrl = useMutation(api.jobs.generateUploadUrl);
+  const toggleSave = useMutation(api.savedJobs.toggleSave);
 
   const [coverLetter, setCoverLetter] = useState("");
   const [resumeUrl, setResumeUrl] = useState("");
@@ -129,6 +139,39 @@ export default function JobDetailPage({
     }
   };
 
+  const handleToggleSave = async () => {
+    try {
+      const result = await toggleSave({ jobId: jobId as Id<"jobs"> });
+      toast.success(result.saved ? "Job saved!" : "Job unsaved");
+    } catch {
+      toast.error("Please sign in to save jobs");
+    }
+  };
+
+  const handleShare = (platform: string) => {
+    const url = window.location.href;
+    const title = job ? `${job.title} at ${job.companyName}` : "Job on JobPing";
+
+    switch (platform) {
+      case "copy":
+        navigator.clipboard.writeText(url);
+        toast.success("Link copied to clipboard!");
+        break;
+      case "twitter":
+        window.open(
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
+          "_blank"
+        );
+        break;
+      case "linkedin":
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+          "_blank"
+        );
+        break;
+    }
+  };
+
   if (job === undefined) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-8">
@@ -162,7 +205,7 @@ export default function JobDetailPage({
     <div className="mx-auto max-w-4xl px-4 py-8">
       <Link
         href="/jobs"
-        className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Jobs
@@ -183,7 +226,7 @@ export default function JobDetailPage({
 
               <div className="mb-8">
                 <div className="mb-6 flex items-start gap-5">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl border border-border/50 bg-muted/30 text-2xl font-bold text-foreground">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-2xl font-bold text-primary">
                     {job.companyName.charAt(0).toUpperCase()}
                   </div>
                   <div className="space-y-1">
@@ -198,7 +241,7 @@ export default function JobDetailPage({
 
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-y border-border/40 py-4 text-sm font-medium text-muted-foreground">
                   <span className="flex items-center gap-2 text-foreground/80">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    <MapPin className="h-4 w-4 text-primary/60" />
                     {job.location}
                   </span>
                   <span className="flex items-center gap-2">
@@ -215,7 +258,7 @@ export default function JobDetailPage({
                   </span>
                   {job.salaryMin != null && job.salaryMax != null && (
                     <span className="flex items-center gap-2 font-semibold text-foreground/90">
-                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                      <DollarSign className="h-4 w-4 text-primary/60" />
                       ${job.salaryMin.toLocaleString()} - ${job.salaryMax.toLocaleString()}
                     </span>
                   )}
@@ -236,7 +279,7 @@ export default function JobDetailPage({
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {job.skills.map((skill) => (
-                      <Badge key={skill} variant="secondary">
+                      <Badge key={skill} variant="secondary" className="bg-primary/5 border border-primary/10 text-primary/80">
                         {skill}
                       </Badge>
                     ))}
@@ -248,7 +291,7 @@ export default function JobDetailPage({
         </div>
 
         {/* Sidebar */}
-        <div>
+        <div className="space-y-4">
           <Card className="border-border/50">
             <CardContent className="p-6">
               {job.isExpired ? (
@@ -266,8 +309,8 @@ export default function JobDetailPage({
                 </div>
               ) : hasApplied ? (
                 <div className="text-center">
-                  <CheckCircle className="mx-auto mb-3 h-10 w-10 text-green-500" />
-                  <p className="font-semibold text-green-600">
+                  <CheckCircle className="mx-auto mb-3 h-10 w-10 text-primary" />
+                  <p className="font-semibold text-primary">
                     You&apos;ve Applied!
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
@@ -282,7 +325,7 @@ export default function JobDetailPage({
               ) : isSignedIn ? (
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button className="w-full font-medium">
+                    <Button className="w-full font-medium shadow-sm">
                       Apply Now
                     </Button>
                   </DialogTrigger>
@@ -299,11 +342,11 @@ export default function JobDetailPage({
                         <Label>Resume Upload</Label>
                         <div
                           onClick={() => fileInputRef.current?.click()}
-                          className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-border/50 p-4 transition-colors hover:border-foreground/50 hover:bg-muted/50"
+                          className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-primary/20 p-4 transition-colors hover:border-primary/40 hover:bg-primary/5"
                         >
                           {resumeFile ? (
                             <>
-                              <FileText className="h-5 w-5 shrink-0 text-foreground" />
+                              <FileText className="h-5 w-5 shrink-0 text-primary" />
                               <div className="flex-1 truncate">
                                 <p className="truncate text-sm font-medium">
                                   {resumeFile.name}
@@ -399,6 +442,65 @@ export default function JobDetailPage({
                   </Link>
                 </div>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Save & Share Card */}
+          <Card className="border-border/50">
+            <CardContent className="p-4 space-y-3">
+              {/* Bookmark button */}
+              <Button
+                variant="outline"
+                className={`w-full gap-2 font-medium transition-all ${
+                  isSaved
+                    ? "border-primary/30 bg-primary/5 text-primary hover:bg-primary/10"
+                    : "hover:border-primary/20 hover:text-primary"
+                }`}
+                onClick={handleToggleSave}
+              >
+                {isSaved ? (
+                  <>
+                    <BookmarkCheck className="h-4 w-4" />
+                    Saved
+                  </>
+                ) : (
+                  <>
+                    <Bookmark className="h-4 w-4" />
+                    Save Job
+                  </>
+                )}
+              </Button>
+
+              {/* Share buttons */}
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 gap-1.5 text-xs hover:border-primary/20 hover:text-primary"
+                  onClick={() => handleShare("copy")}
+                >
+                  <Link2 className="h-3.5 w-3.5" />
+                  Copy Link
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 gap-1.5 text-xs hover:border-primary/20 hover:text-primary"
+                  onClick={() => handleShare("twitter")}
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  X / Twitter
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 gap-1.5 text-xs hover:border-primary/20 hover:text-primary"
+                  onClick={() => handleShare("linkedin")}
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  LinkedIn
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
