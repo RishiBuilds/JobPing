@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 const plans = [
@@ -53,27 +52,34 @@ export function Pricing() {
     <section className="bg-background py-24 sm:py-32" id="pricing">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
+          <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary mb-4">
+            Pricing
+          </div>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Simple, transparent pricing
+            Simple,{" "}
+            <span className="gradient-text">transparent</span> pricing
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             Start free and scale as you grow. No hidden fees.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3 lg:gap-12 lg:px-8">
+        <div className="mt-16 grid gap-8 md:grid-cols-3 lg:gap-6 lg:px-8">
           {plans.map((plan) => (
             <div
               key={plan.name}
               className={`relative flex flex-col justify-between rounded-3xl p-8 transition-all duration-300 ${
                 plan.popular
-                  ? "border border-border/60 bg-card shadow-2xl shadow-black/5 ring-1 ring-primary/20 dark:shadow-none"
-                  : "border border-border/40 bg-zinc-50/50 hover:border-border/80 dark:bg-card"
+                  ? "border-2 border-primary/30 bg-card shadow-2xl shadow-primary/5 scale-[1.02]"
+                  : "border border-border/40 bg-card hover:border-primary/15 hover:shadow-lg hover:shadow-primary/5"
               }`}
             >
               {plan.popular && (
-                <div className="absolute -top-4 left-0 right-0 mx-auto w-fit rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-sm">
-                  Recommended
+                <div className="absolute -top-4 left-0 right-0 mx-auto w-fit">
+                  <div className="inline-flex items-center gap-1.5 rounded-full accent-gradient-bg px-4 py-1.5 text-xs font-semibold text-white shadow-md shadow-primary/20">
+                    <Sparkles className="h-3 w-3" />
+                    Recommended
+                  </div>
                 </div>
               )}
               
@@ -92,10 +98,10 @@ export function Pricing() {
 
                 <Link href="/sign-up" className="mt-8 block">
                   <Button
-                    className={`w-full font-medium rounded-full ${
+                    className={`w-full font-medium rounded-full transition-all ${
                       plan.popular
-                        ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
-                        : "bg-background text-foreground border-border/60 hover:bg-muted"
+                        ? "shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 hover:scale-[1.02]"
+                        : ""
                     }`}
                     variant={plan.popular ? "default" : "outline"}
                     size="lg"
