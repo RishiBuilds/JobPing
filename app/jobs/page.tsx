@@ -20,10 +20,11 @@ import {
   Clock,
   Search,
   Building,
+  X,
+  SlidersHorizontal,
 } from "lucide-react";
 import Link from "next/link";
 
-// Custom debounce hook
 function useDebouncedValue<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState(value);
 
@@ -42,7 +43,6 @@ export default function JobsPage() {
   const [workMode, setWorkMode] = useState("");
   const [experienceLevel, setExperienceLevel] = useState("");
 
-  // Debounce search inputs by 300ms
   const debouncedSearch = useDebouncedValue(searchTerm, 300);
   const debouncedLocation = useDebouncedValue(location, 300);
 
@@ -57,9 +57,13 @@ export default function JobsPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="mb-8 text-center">
+        <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary mb-4">
+          <SlidersHorizontal className="h-3 w-3 mr-1.5" />
+          {jobs?.length ?? 0} opportunities available
+        </div>
         <h1 className="text-3xl font-bold">
           Find Your{" "}
-          <span className="text-foreground">
+          <span className="gradient-text">
             Dream Job
           </span>
         </h1>
@@ -68,7 +72,6 @@ export default function JobsPage() {
         </p>
       </div>
 
-      {/* Search & Filters */}
       <Card className="mb-8 border-border/50">
         <CardContent className="p-6">
           <div className="flex flex-col gap-4 sm:flex-row">
@@ -135,10 +138,48 @@ export default function JobsPage() {
         </CardContent>
       </Card>
 
-      {/* Results */}
-      <p className="mb-4 text-sm text-muted-foreground">
-        {jobs?.length ?? 0} jobs found
-      </p>
+      {(searchTerm || location || (jobType && jobType !== "all") || (workMode && workMode !== "all") || (experienceLevel && experienceLevel !== "all")) && (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground">Active filters:</span>
+          {searchTerm && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-1 text-xs font-medium text-primary">
+              {searchTerm}
+              <button onClick={() => setSearchTerm("")}><X className="h-3 w-3" /></button>
+            </span>
+          )}
+          {location && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-1 text-xs font-medium text-primary">
+              <MapPin className="h-3 w-3" />{location}
+              <button onClick={() => setLocation("")}><X className="h-3 w-3" /></button>
+            </span>
+          )}
+          {jobType && jobType !== "all" && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-1 text-xs font-medium text-primary capitalize">
+              {jobType}
+              <button onClick={() => setJobType("")}><X className="h-3 w-3" /></button>
+            </span>
+          )}
+          {workMode && workMode !== "all" && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-1 text-xs font-medium text-primary capitalize">
+              {workMode}
+              <button onClick={() => setWorkMode("")}><X className="h-3 w-3" /></button>
+            </span>
+          )}
+          {experienceLevel && experienceLevel !== "all" && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-2.5 py-1 text-xs font-medium text-primary capitalize">
+              {experienceLevel}
+              <button onClick={() => setExperienceLevel("")}><X className="h-3 w-3" /></button>
+            </span>
+          )}
+        </div>
+      )}
+
+      <div className="mb-4 flex items-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-sm font-medium text-muted-foreground">
+          <Briefcase className="h-3.5 w-3.5" />
+          {jobs?.length ?? 0} jobs found
+        </span>
+      </div>
 
       {!jobs ? (
         <div className="space-y-4">
