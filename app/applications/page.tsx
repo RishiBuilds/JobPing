@@ -4,19 +4,24 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Calendar, Building, Briefcase } from "lucide-react";
+import { MapPin, Calendar, Building, Briefcase, FileText } from "lucide-react";
 import Link from "next/link";
 
 export default function ApplicationsPage() {
   const applications = useQuery(api.applications.getByApplicant);
 
+  const statusSteps = ["pending", "reviewed", "shortlisted", "hired"] as const;
+
   const statusColors: Record<string, string> = {
-    pending: "bg-yellow-500/10 text-yellow-600",
-    reviewed: "bg-blue-500/10 text-blue-600",
-    shortlisted: "bg-green-500/10 text-green-600",
-    rejected: "bg-red-500/10 text-red-600",
-    hired: "bg-foreground text-background",
+    pending: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
+    reviewed: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+    shortlisted: "bg-green-500/10 text-green-600 border-green-500/20",
+    rejected: "bg-red-500/10 text-red-600 border-red-500/20",
+    hired: "bg-foreground text-background border-transparent",
   };
+
+  const statusStepIndex = (status: string) =>
+    statusSteps.indexOf(status as (typeof statusSteps)[number]);
 
   if (!applications) {
     return (
@@ -68,10 +73,10 @@ export default function ApplicationsPage() {
             {applications.length === 1 ? "" : "s"}
           </p>
           {applications.map((app) => (
-            <Card key={app._id} className="border-border/50">
+            <Card key={app._id} className="border-border/50 transition-all hover:border-primary/20 hover:shadow-sm">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
-                  <div>
+                  <div className="flex-1">
                     <h3 className="text-lg font-semibold">{app.jobTitle}</h3>
                     <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1">
@@ -88,9 +93,39 @@ export default function ApplicationsPage() {
                         <Calendar className="h-3.5 w-3.5" />
                         Applied {new Date(app.appliedAt).toLocaleDateString()}
                       </span>
+                      {app.coverLetter && (
+                        <span className="flex items-center gap-1 text-primary">
+                          <FileText className="h-3.5 w-3.5" />
+                          Cover letter included
+                        </span>
+                      )}
                     </div>
+
+                    {app.status !== "rejected" && (
+                      <div className="mt-4 flex items-center gap-1">
+                        {statusSteps.map((step, idx) => {
+                          const current = statusStepIndex(app.status);
+                          const isCompleted = idx <= current;
+                          return (
+                            <div key={step} className="flex items-center gap-1">
+                              <div
+                                className={`h-1.5 w-8 rounded-full transition-colors ${
+                                  isCompleted ? "bg-primary" : "bg-muted"
+                                }`}
+                              />
+                              {idx < statusSteps.length - 1 && (
+                                <div className="h-px w-1 bg-transparent" />
+                              )}
+                            </div>
+                          );
+                        })}
+                        <span className="ml-2 text-xs text-muted-foreground capitalize">
+                          {app.status}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <Badge className={statusColors[app.status] ?? ""}>
+                  <Badge className={`ml-4 shrink-0 border ${statusColors[app.status] ?? ""}`}>
                     {app.status}
                   </Badge>
                 </div>
