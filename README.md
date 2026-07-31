@@ -1,60 +1,112 @@
 # JobPing
 
-JobPing is a modern job platform connecting talented professionals with top companies. Browse jobs, build your profile, and get hired.
+> A modern, full-stack job board platform connecting talented professionals with top companies.
+
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Clerk](https://img.shields.io/badge/Auth-Clerk-purple?logo=clerk)](https://clerk.com/)
+[![Convex](https://img.shields.io/badge/Backend-Convex-orange)](https://www.convex.dev/)
+
+## Overview
+
+JobPing is a real-time job platform built for both job seekers and employers. Browse listings, track applications, and manage your hiring pipeline — all in one place.
 
 ## Features
-- **User Authentication:** Secure sign-up and sign-in flows powered by Clerk.
-- **Job Board:** Browse and search for recent job postings.
-- **Dashboard:** Manage jobs and applications from a dedicated dashboard.
-- **Real-time Database:** Fast and scalable backend powered by Convex.
-- **Modern UI:** Built with Tailwind CSS, shadcn/ui, and beautiful animations for a responsive experience.
+
+- **Authentication** — Secure sign-up/sign-in flows with org support, powered by Clerk
+- **Real-time Notifications** — Instant alerts for new applications and status changes
+- **AI-Powered Matching** — Surfaces the most relevant jobs and candidates automatically
+- **Job Board** — Browse, filter, and save job listings across roles, locations, and work modes
+- **Employer Dashboard** — Manage job postings, track pipeline stats, and review applicants
+- **Application Tracking** — Full lifecycle view from submission to offer
+- **Team Collaboration** — Multi-member orgs with role-based access control
+- **Secure & Private** — End-to-end encrypted data with granular visibility controls
 
 ## Tech Stack
-- **Framework:** [Next.js](https://nextjs.org/) (App Router)
-- **Language:** TypeScript
-- **Authentication:** [Clerk](https://clerk.com/)
-- **Database / Backend:** [Convex](https://www.convex.dev/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components:** [shadcn/ui](https://ui.shadcn.com/)
+
+| Layer              | Technology                                     |
+| ------------------ | ---------------------------------------------- |
+| Framework          | [Next.js 15](https://nextjs.org/) (App Router) |
+| Language           | TypeScript                                     |
+| Authentication     | [Clerk](https://clerk.com/)                    |
+| Database / Backend | [Convex](https://www.convex.dev/)              |
+| Styling            | [Tailwind CSS](https://tailwindcss.com/)       |
+| UI Components      | [shadcn/ui](https://ui.shadcn.com/)            |
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v18 or later)
-- npm, pnpm, or yarn
+
+- Node.js v18 or later
+- `npm`, `pnpm`, or `yarn`
+- A [Clerk](https://clerk.com/) account
+- A [Convex](https://www.convex.dev/) project
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the repository:**
+
    ```bash
    git clone <repository-url>
    cd jobping
    ```
 
-2. Install dependencies:
+2. **Install dependencies:**
+
    ```bash
-   npm install
-   # or
    pnpm install
    ```
 
-3. Set up environment variables:
-   Create a `.env.local` file in the root directory and add your keys for Clerk and Convex:
+3. **Set up environment variables:**
+
+   Create a `.env.local` file in the root directory:
+
    ```env
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
    CLERK_SECRET_KEY=your_clerk_secret_key
-   
+
+   NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+   NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+
    CONVEX_DEPLOYMENT=your_convex_deployment
    NEXT_PUBLIC_CONVEX_URL=your_convex_url
-   
-   # Note: Additional webhook secrets or API keys may be required depending on functionality.
+
+   # Optional: Webhook secret for Clerk → Convex sync
+   CLERK_WEBHOOK_SECRET=your_webhook_secret
    ```
 
-4. Run the development server:
+4. **Start the development server:**
+
    ```bash
-   npm run dev
-   # or
    pnpm dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application running locally.
+5. Open [http://localhost:3000](http://localhost:3000) to see the app.
+
+## Project Structure
+
+```
+jobping/
+├── app/                   # Next.js App Router pages
+│   ├── dashboard/         # Employer dashboard
+│   ├── jobs/              # Public job listings
+│   ├── applications/      # Job seeker application tracker
+│   └── saved/             # Saved jobs
+├── components/
+│   ├── landing/           # Marketing/landing page sections
+│   └── ui/                # shadcn/ui components
+├── convex/                # Convex backend (schema, queries, mutations)
+└── lib/                   # Shared utilities
+```
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Fork the repo and create a feature branch (`git checkout -b feat/my-feature`)
+2. Make your changes with clear, focused commits
+3. Open a pull request with a description of what you changed and why
+
+## License
+
+MIT
