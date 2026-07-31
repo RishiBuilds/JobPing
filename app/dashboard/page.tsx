@@ -7,7 +7,7 @@ import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Briefcase, Users, FileText, TrendingUp, Plus } from "lucide-react";
+import { Briefcase, Users, FileText, TrendingUp, Plus, Rocket } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardPage() {
@@ -48,6 +48,12 @@ export default function DashboardPage() {
         <p className="mt-4 text-sm text-muted-foreground">
           Use the organization switcher in the sidebar to get started.
         </p>
+        <div className="mt-6 flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm text-primary">
+            <Rocket className="h-3.5 w-3.5" />
+            Set up your org in under 2 minutes
+          </div>
+        </div>
       </div>
     );
   }
