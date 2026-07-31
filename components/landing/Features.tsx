@@ -7,6 +7,8 @@ import {
   Upload,
   Activity,
   Bell,
+  Sparkles,
+  Lock,
 } from "lucide-react";
 
 const features = [
@@ -40,12 +42,21 @@ const features = [
     title: "Smart Notifications",
     description: "Stay informed with instant alerts for new applications, status changes, and job expirations.",
   },
+  {
+    icon: Sparkles,
+    title: "AI-Powered Matching",
+    description: "Our AI analyzes your skills and experience to surface the most relevant jobs and candidates automatically.",
+  },
+  {
+    icon: Lock,
+    title: "Secure & Private",
+    description: "Your data is encrypted end-to-end. Control exactly who sees your profile and applications.",
+  },
 ];
 
 export function Features() {
   return (
     <section id="features" className="relative overflow-hidden py-24 sm:py-32 bg-background">
-      {/* Subtle bg */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-0 right-0 h-[300px] w-[300px] rounded-full bg-primary/5 blur-[100px]" />
         <div className="absolute bottom-0 left-0 h-[250px] w-[250px] rounded-full bg-primary/3 blur-[80px]" />
@@ -65,7 +76,7 @@ export function Features() {
           </p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {features.map((feature, i) => (
             <div
               key={feature.title}
@@ -81,6 +92,11 @@ export function Features() {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {feature.description}
               </p>
+              {feature.title === "AI-Powered Matching" && (
+                <span className="mt-3 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+                  New
+                </span>
+              )}
             </div>
           ))}
         </div>
