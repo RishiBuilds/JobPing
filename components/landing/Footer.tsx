@@ -5,7 +5,6 @@ const footerLinks = {
   Product: [
     { label: "Find Jobs", href: "/jobs" },
     { label: "For Employers", href: "/dashboard" },
-    { label: "Pricing", href: "#pricing" },
     { label: "How it Works", href: "#how-it-works" },
   ],
   Company: [
