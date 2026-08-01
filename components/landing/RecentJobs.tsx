@@ -80,7 +80,7 @@ export function RecentJobs() {
 
         <div className="grid gap-5 lg:grid-cols-3">
           {jobs.map((job: any, index: number) => (
-            <Link key={job._id || job.title} href="/sign-up">
+            <Link key={job._id || job.title} href={job._id ? `/jobs/${job._id}` : "/jobs"}>
               <div
                 className="group relative flex h-full flex-col justify-between rounded-xl border border-border/40 bg-background p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5"
                 style={{ animationDelay: `${index * 100}ms` }}
