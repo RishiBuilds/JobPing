@@ -6,6 +6,7 @@ import { StatsBar } from "@/components/landing/StatsBar";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { RecentJobs } from "@/components/landing/RecentJobs";
 import { Testimonials } from "@/components/landing/Testimonials";
+import { FAQ } from "@/components/landing/FAQ";
 import { Pricing } from "@/components/landing/Pricing";
 import { Footer } from "@/components/landing/Footer";
 
@@ -20,6 +21,7 @@ export default function Home() {
       <RecentJobs />
       <HowItWorks />
       <Testimonials />
+      <FAQ />
       <Pricing />
       <Footer />
     </div>
